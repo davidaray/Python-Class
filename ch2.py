@@ -98,7 +98,7 @@ while n <=20:
 	deltaE == betaE
 	n = n + 1
 	
-#math's wrong but idc
+#math's wrong
 
 ------
 
@@ -193,6 +193,12 @@ for e1 in a: #for the 2nd number in list a
 #Write a correct program.
 
 no effin clue I'm not in high school anymore 
+s = 0; k = 1; M = 100 
+while k < M+1: 
+	s += 1/k 
+	k += 1
+	print(s)
+
 
 #	Hint There are two basic ways to ﬁnd errors in a program:
 #		1. read the program carefully and think about the consequences of each statement, 
@@ -204,6 +210,12 @@ no effin clue I'm not in high school anymore
 	
 #Exercise 2.12: Replace a while loop by a for loop 
 #RewritethecorrectedversionoftheprograminExercise2.11usingaforloopover k values instead of a whileloop. Filename: sum_for.
+
+s = 0; k = 1; M = 100 
+for k in range(0, M+1): 
+	s += 1/k 
+	k += 1
+	print(s)
 
 ----------
 
