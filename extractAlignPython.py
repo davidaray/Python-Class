@@ -35,11 +35,64 @@ def get_args():
 
 seq = seq.reverse_complement()
 	
-file = open(TE, "a+")
+
+
+
+#from blast output file, add Seqbuffer to start and stop positions
+#import pandas
+
+df = pd.data_frame(BLAST, sep='\t', names=" qseqid	 sseqid	 pident	 length	 mismatch	 gapopen	 qstart	 qend	 sstart	 send	 evalue	 bitscore")
+
+#add buffer zones to start and stop 
+
+def Xbuffer:
+	df['qend'] = df['qend'] + BUFFER
+def Ybuffer:
+ 	df['qstart'] = df['qstart'] - BUFFER	 #npwhere (column, change, column to apply)
+	if df['qstart'] <0:
+		df['qstart'] = 0
+	else: 
+		pass 
+df.apply(Xbuffer)
+df.apply(Ybuffer)
+
+#rerank blast file by e value
+
+df.sort_values(by=['evalue'])
+
+#create new file for each blasted TE 
+
+file = open(TE'.fas', "w+")
 for record in SeqIO.parse(INPUT, "fasta"):
+	TEfile = open(TE'.fas', "a+")
 	re.sub('__'(.*) '___', '#'\1'/', record.id)	
 	record.id = 'CONSENSUS' + record.id
-	file.write(record.id + '\n', "a+")
+	TEfile.write(record.id + '\n', "w+")
+
+#add top 40 blast hits to the new file  
+	n=0
+	while n <41:
+		if seqIO.record == df['qseqid'] 
+			TEfile.write(record.id, fasta, "a+") 
+			n += 1
+		else: 
+			pass 
+		
+#align with muscle 
+
+	subprocess.run(["/lustre/work/daray/software/muscle/muscle", '-i', TE, '-o', TE'.muscle.fas'])
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
