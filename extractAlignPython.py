@@ -48,7 +48,7 @@ df = pd.data_frame(BLAST, sep='\t', names=" qseqid	 sseqid	 pident	 length	�
 def Xbuffer:
 	df['qend'] = df['qend'] + BUFFER
 def Ybuffer:
- 	df['qstart'] = df['qstart'] - BUFFER	 #npwhere (column, change, column to apply)
+ 	df['qstart'] = df['qstart'] - BUFFER	 #npwhere (column, change, column to apply), pybedtools? 
 	if df['qstart'] <0:
 		df['qstart'] = 0
 	else: 
@@ -58,7 +58,7 @@ df.apply(Ybuffer)
 
 #rerank blast file by e value
 
-df.sort_values(by=['evalue'])
+df.sort_values(by=['evalue', 'bitscore'], ascending=[True, False]) 
 
 #create new file for each blasted TE 
 
@@ -73,14 +73,14 @@ for record in SeqIO.parse(INPUT, "fasta"):
 	n=0
 	while n <41:
 		if seqIO.record == df['qseqid'] 
-			TEfile.write(record.id, fasta, "a+") 
+			TEfile.write(record.id, fasta, "a+") #write record,not record.id; 
 			n += 1
 		else: 
 			pass 
 		
 #align with muscle 
 
-	subprocess.run(["/lustre/work/daray/software/muscle/muscle", '-i', TE, '-o', TE'.muscle.fas'])
+	subprocess.run(["/lustre/work/daray/software/muscle/muscle", '-i', TE, '-o', TE'.muscle.fas']) #need to make this optional 
 
 
 
