@@ -35,18 +35,75 @@ def get_args():
 
 seq = seq.reverse_complement()
 	
-
-
-
+	
 #from blast output file, add Seqbuffer to start and stop positions
 #import pandas
 
-df = pd.data_frame(BLAST, sep='\t', names=['QUERYNAME', 'SCAFFOLD', 'C', 'D', 'E', 'F', 'QUERYSTART', 'QUERYSTOP', 'SCAFSTART', 'SCAFSTOP', 'E-VALUE', 'BITSCORE'])
+#df = pd.data_frame(BLAST, sep='\t', names=['QUERYNAME', 'SCAFFOLD', 'C', 'D', 'E', 'F', 'QUERYSTART', 'QUERYSTOP', 'SCAFSTART', 'SCAFSTOP', 'E-VALUE', 'BITSCORE'])
+
+#make TE output file function 
+def CREATE_TE_OUTFILES(TES):
+	for record in SeqIO.parse(TES, 'fasta'):
+		NEWID = re.sub('#', '__', record.id)
+		NEWID = re.sub('/', '___', NEWID)
+		record.id = 'CONSENSUS-' + NEWID
+		record.description = ''
+		SeqIO.write(record, NEWID + '.fas', 'fasta')
+
+#import blast data 
+df = pd.data_frame('BLAST', sep='\t', names=['QUERYNAME', 'SCAFFOLD', 'C', 'D', 'E', 'F', 'QUERYSTART', 'QUERYSTOP', 'SCAFSTART', 'SCAFSTOP', 'E-VALUE', 'BITSCORE'])
 
 #add buffer zones to start and stop 
 df.loc[:, 'QUERYSTART'] = df.loc[: 'QUERYSTART'] - BUFFER #introduces buffer number to the blast file
 df.loc[df['QUERYSTART']<0, 'QUERYSTART'] = 0  
 df.loc[:, 'QUERYSTOP'] = df.loc[: 'QUERYSTOP'] + BUFFER
+
+#rerank blast file by e value
+
+df.sort_values(by=['E-VALUE', 'BITSCORE'], ascending=[True, False])
+
+#determine blast hits 
+blastscaffold=df["SCAFFOLD"]
+blastscaffold=blastscaffold.unique()
+for hit in blastscaffold:
+	blasthits = blastscaffold.head(BUFFER)
+	
+	
+for record in SeqIO.parse('HLphyDis2.fa', "fasta"):
+	if blastscaffold in record.id:
+		f.write(str(seq_record.id) + "\n")
+			f.write(str(seq_record.seq['QUERYSTART':'QUERYSTOP']) + "\n")
+				
+
+
+
+	n=0
+	while n <41:
+		if  blastid in record.id: 
+			#call function to pull out sequence from genome 
+			SeqIO.write(record, 'pDis_rnd-5_family-2483__LTR___ERV1_cons.fas', 'fasta')
+#			TEfile.write('>'+record.id + '\n' + str(record.seq) '\n', TEfile, 'fasta') #write record,not record.id;  
+			n += 1
+		else: 
+			pass 
+		
+#align with muscle 
+
+	subprocess.run(["/lustre/work/daray/software/muscle/muscle", '-i', TE, '-o', TE'.muscle.fas']) #need to make this optional 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 #rerank blast file by e value
